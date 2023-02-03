@@ -1,10 +1,12 @@
+import { useState } from "react";
+
 import {
   ImageBackground,
   StyleSheet,
-  VirtualizedList,
   View,
   Text,
   Pressable,
+  FlatList,
 } from "react-native";
 
 import {
@@ -16,37 +18,49 @@ import {
   AddNewCharacterIcon,
 } from "../components/Icons";
 
-const DATA = [];
-
-const [initiativeItems, setCount] = useState(0);
-
-const getItem = (data, index) => ({
-  id: Math.random().toString(12).substring(0),
-  title: `Item ${index + 1}`,
-});
-
-const getItemCount = (data) => 0;
-
-const addCharacter = () => alert("Add character");
-const refresh = () => alert("refresh!");
-const prinInfo =(title) => alert(title)
- 
-const Item = ({ title }) => (
-  <Pressable style={{display: "flex",flexDirection: "row", justifyContent:"space-between", alignItems:"center"}} onPress={refresh}>
-    <InitiativeArrowIcon/>
-    <View style={styles.trackerItem}>
-      <CreatureIcon />
-      <Text style={styles.title}>{title}</Text>
-      <DeleteIcon />
-    </View>
-    <InitiativeArrowIcon
-      style={{ transform: [{ rotateY: "180deg" }] }}
-    />
-  </Pressable>
-);
-
 export default function Battle() {
-  const renderItem = ({ item }) => <Item title={item.title} />;
+  const [initialElements, changeEl] = useState([]);
+  const addCharacter = () => addItem(Math.random().toString(12).substring(0));
+
+  const addItem = (id) => {
+    var newArray = [...initialElements, { id: id, title: "Item " + id }];
+    changeEl(newArray);
+  };
+
+  const deleteItem = (id) => {
+    const newArray = initialElements.filter((item) => item.id !== id);
+    changeEl(newArray);
+  };
+
+  const refreshInitive = () => {
+    var newArray = [];
+    changeEl(newArray);
+  };
+
+  const Item = ({ title, id }) => (
+    <Pressable
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+      }}
+    >
+      <InitiativeArrowIcon />
+      <View style={styles.trackerItem}>
+        <CreatureIcon />
+        <Text style={styles.title}>{title}</Text>
+        <Pressable
+          onPress={() => {
+            deleteItem(id);
+          }}
+        >
+          <DeleteIcon />
+        </Pressable>
+      </View>
+      <InitiativeArrowIcon style={{ transform: [{ rotateY: "180deg" }] }} />
+    </Pressable>
+  );
 
   return (
     <>
@@ -59,17 +73,14 @@ export default function Battle() {
           <Pressable onPress={addCharacter}>
             <AddNewCharacterIcon />
           </Pressable>
-          <Pressable onPress={refresh}>
+          <Pressable onPress={refreshInitive}>
             <RefreshIcon />
           </Pressable>
         </View>
-        <VirtualizedList
-          data={DATA}
-          initialNumToRender={4}
-          renderItem={({ item }) => <Item title={item.title} />}
+        <FlatList
+          data={initialElements}
+          renderItem={({ item }) => <Item title={item.title} id={item.id} />}
           keyExtractor={(item) => item.id}
-          getItemCount={getItemCount}
-          getItem={getItem}
         />
       </View>
     </>

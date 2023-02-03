@@ -4,10 +4,17 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useFonts } from "expo-font";
 
-import Battle  from "./components/Battle";
+import Battle from "./components/Battle";
 import Library from "./components/Library";
 import Settings from "./components/Settings";
-import  {BookIcon, BookOutlineIcon, SwordsIcon, SwordsIconOutline, SettingsIcon, SettingIconOutline}  from "./components/Icons";
+import {
+  BookIcon,
+  BookOutlineIcon,
+  SwordsIcon,
+  SwordsIconOutline,
+  SettingsIcon,
+  SettingIconOutline,
+} from "./components/Icons";
 
 const Tab = createBottomTabNavigator();
 
@@ -17,22 +24,21 @@ export default function App() {
       <Tab.Navigator
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused }) => {
-            let iconName;
+            let SpecificIcon;
 
             if (route.name === "Battle") {
-              iconName = focused ? SwordsIcon :SwordsIconOutline;
+              SpecificIcon = focused ? SwordsIcon : SwordsIconOutline;
             }
 
             if (route.name === "Settings") {
-              iconName = focused ? SettingsIcon : SettingIconOutline;
+              SpecificIcon = focused ? SettingsIcon : SettingIconOutline;
             }
 
             if (route.name === "Library") {
-              iconName = focused ? BookIcon : BookOutlineIcon;
+              SpecificIcon = focused ? BookIcon : BookOutlineIcon;
             }
-            
-            SpecificIcon = iconName;
-            return <SpecificIcon/>;
+
+            return <SpecificIcon />;
           },
           headerShown: false,
         })}
