@@ -11,7 +11,13 @@ import {
   Text,
 } from "react-native";
 
-import { RefreshIcon, AddNewCharacterIcon, Arrow, CreatureIcon, DeleteIcon } from "../components/Icons";
+import {
+  RefreshIcon,
+  AddNewCharacterIcon,
+  Arrow,
+  CreatureIcon,
+  DeleteIcon,
+} from "../components/Icons";
 
 const { width, height } = Dimensions.get("screen");
 
@@ -47,31 +53,33 @@ function creaturesReducer(creatures, action) {
 }
 
 export default function Battle() {
-
   const [creatures, dispatch] = useReducer(creaturesReducer, []);
   const ref = useRef(null);
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
-    if(creatures.length>0){
-    ref.current?.scrollToIndex({
-      index,
-      animated: true,
-    });
-  }
+    if (creatures.length > 0) {
+      ref.current?.scrollToIndex({
+        index,
+        animated: true,
+      });
+    }
   }, [index]);
 
   function handleAddCreature() {
-      dispatch({
-        type: "added",
-        id: Math.random().toString(12).substring(0),
-        title: "Item" + Math.random().toString(12).substring(0),
-      });
+    dispatch({
+      type: "added",
+      id: Math.random().toString(12).substring(0),
+      title: "Item" + Math.random().toString(12).substring(0),
+    });
   }
 
   function handleDeleteCreature(id, index, fIndex) {
-    if(index > fIndex){
-      setIndex(index-1)
+    if (index > fIndex) {
+      setIndex(index - 1);
+    }
+    if (index === creatures.length - 1) {
+      setIndex(0);
     }
     dispatch({
       type: "deleted",
@@ -80,14 +88,13 @@ export default function Battle() {
   }
 
   function handleRefreshCreatures() {
-
     dispatch({
       type: "refreshed",
     });
-    setIndex(0)
+    setIndex(0);
   }
 
-  const Item = ({ title, id, index , fIndex }) => (
+  const Item = ({ title, id, index, fIndex }) => (
     <Pressable
       style={{
         flexDirection: "row",
@@ -95,11 +102,18 @@ export default function Battle() {
         alignItems: "center",
       }}
     >
-      <View style={[styles.trackerItem, { backgroundColor:
-                    fIndex === index ? _colors.active : _colors.inactive}]}>
+      <View
+        style={[
+          styles.trackerItem,
+          {
+            backgroundColor:
+              fIndex === index ? _colors.active : _colors.inactive,
+          },
+        ]}
+      >
         <CreatureIcon />
         <Text style={styles.title}>{title}</Text>
-        <Pressable onPress={()=>handleDeleteCreature(id, index, fIndex)}>
+        <Pressable onPress={() => handleDeleteCreature(id, index, fIndex)}>
           <DeleteIcon />
         </Pressable>
       </View>
@@ -114,24 +128,27 @@ export default function Battle() {
             <AddNewCharacterIcon />
           </Pressable>
           <Pressable>
-            <RefreshIcon onPress={handleRefreshCreatures}/>
+            <RefreshIcon onPress={handleRefreshCreatures} />
           </Pressable>
         </View>
         <FlatList
           ref={ref}
           initialScrollIndex={index}
-          style={{maxHeight: 500}}
+          style={{ maxHeight: 500 }}
           data={creatures}
-          ListEmptyComponent={()=>{
-            return(
-              <Text>Nothing here</Text>
-            )
+          ListEmptyComponent={() => {
+            return <Text>Nothing here</Text>;
           }}
           keyExtractor={(item) => item.id}
           showsVerticalScrollIndicator={false}
           renderItem={({ item, index: fIndex }) => {
             return (
-              <Item title={item.title} id={item.id} index={index} fIndex={fIndex} />   
+              <Item
+                title={item.title}
+                id={item.id}
+                index={index}
+                fIndex={fIndex}
+              />
             );
           }}
         />
