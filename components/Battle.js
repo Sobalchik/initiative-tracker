@@ -1,4 +1,4 @@
-import { useState, useReducer, useRef, useEffect } from "react";
+import { useState, useReducer, useRef, useEffect} from "react";
 import { Entypo, Feather } from "@expo/vector-icons";
 
 import {
@@ -62,6 +62,7 @@ export default function Battle() {
       ref.current?.scrollToIndex({
         index,
         animated: true,
+        viewPostiton: 0.5,
       });
     }
   }, [index]);
@@ -120,6 +121,11 @@ export default function Battle() {
     </Pressable>
   );
 
+  const renderItem = ({ item, index: fIndex }) => (
+    <Item title={item.title} id={item.id} index={index} fIndex={fIndex} />
+  );
+
+      
   return (
     <>
       <View style={styles.container}>
@@ -141,16 +147,7 @@ export default function Battle() {
           }}
           keyExtractor={(item) => item.id}
           showsVerticalScrollIndicator={false}
-          renderItem={({ item, index: fIndex }) => {
-            return (
-              <Item
-                title={item.title}
-                id={item.id}
-                index={index}
-                fIndex={fIndex}
-              />
-            );
-          }}
+          renderItem={renderItem}
         />
         <View
           style={{
