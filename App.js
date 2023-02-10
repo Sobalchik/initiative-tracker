@@ -39,6 +39,7 @@ export default function App() {
             return <SpecificIcon />;
           },
           headerShown: false,
+          tabBarHideOnKeyboard: true,
         })}
       >
         <Tab.Screen name="Library" component={Library} />

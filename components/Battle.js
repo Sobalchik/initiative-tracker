@@ -1,5 +1,6 @@
-import { useState, useReducer, useRef, useEffect} from "react";
+import { useState, useReducer, useRef, useEffect, memo} from "react";
 import { Entypo, Feather } from "@expo/vector-icons";
+import uuid from "react-uuid";
 
 import {
   StyleSheet,
@@ -9,6 +10,7 @@ import {
   Dimensions,
   TouchableOpacity,
   Text,
+  Button,
 } from "react-native";
 
 import {
@@ -18,6 +20,8 @@ import {
   CreatureIcon,
   DeleteIcon,
 } from "../components/Icons";
+
+import CharacterCreationModal from "./CharacterCreationModal";
 
 const { width, height } = Dimensions.get("screen");
 
@@ -56,6 +60,7 @@ export default function Battle() {
   const [creatures, dispatch] = useReducer(creaturesReducer, []);
   const ref = useRef(null);
   const [index, setIndex] = useState(0);
+  const [characterCreationModalVisible, setCharacterCreationModalVisible] = useState(false);
 
   useEffect(() => {
     if (creatures.length > 0) {
@@ -68,11 +73,12 @@ export default function Battle() {
   }, [index]);
 
   function handleAddCreature() {
-    dispatch({
-      type: "added",
-      id: Math.random().toString(12).substring(0),
-      title: "Item" + Math.random().toString(12).substring(0),
-    });
+    setCharacterCreationModalVisible(true)
+    // dispatch({
+    //   type: "added",
+    //   id: uuid(),
+    //   title: "Item",
+    // });
   }
 
   function handleDeleteCreature(id, index, fIndex) {
@@ -121,9 +127,13 @@ export default function Battle() {
     </Pressable>
   );
 
-  const renderItem = ({ item, index: fIndex }) => (
-    <Item title={item.title} id={item.id} index={index} fIndex={fIndex} />
+  let c = 0
+
+
+  const renderItem = ({ item, index: fIndex }) => { c++; console.log(c); return (
+    <Item title={item.title} id={item.id} index={index} fIndex={fIndex} /> 
   );
+  }
 
       
   return (
@@ -137,6 +147,9 @@ export default function Battle() {
             <RefreshIcon onPress={handleRefreshCreatures} />
           </Pressable>
         </View>
+
+        <CharacterCreationModal onClose = {()=> setCharacterCreationModalVisible(false)} characterCreationModalVisible={characterCreationModalVisible} />
+        
         <FlatList
           ref={ref}
           initialScrollIndex={index}
@@ -192,6 +205,7 @@ export default function Battle() {
               <TouchableOpacity
                 onPress={() => {
                   if (index === creatures.length - 1) {
+                    setIndex(0);
                     return;
                   }
                   setIndex(index + 1);
@@ -240,5 +254,15 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 16,
+  },
+  modal: {
+    flex: 1,
+    alignItems: 'center',
+    backgroundColor: '#00ff00',
+    padding: 100,
+  },
+  text: {
+    color: '#3f2949',
+    marginTop: 10,
   },
 });

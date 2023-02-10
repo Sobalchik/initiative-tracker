@@ -11,6 +11,10 @@ import InitiativeArrowIcon from "../assets/icons/initiative-arrow.svg"
 import AddNewCharacterIcon from "../assets/icons/add-new-character"
 import RefreshIcon from "../assets/icons/refresh.svg"
 import Arrow from "../assets/icons/arrow.svg"
+import Sword from "../assets/icons/sword.svg"
+import Heart from "../assets/icons/heart.svg"
+import Shield from "../assets/icons/shield.svg"
+
 
 export {BookIcon,BookOutlineIcon,SettingsIcon,SettingIconOutline,
-    SwordsIcon,SwordsIconOutline,DeleteIcon,DeleteIconOutline,CreatureIcon, InitiativeArrowIcon, AddNewCharacterIcon, RefreshIcon, Arrow}
+    SwordsIcon,SwordsIconOutline,DeleteIcon,DeleteIconOutline,CreatureIcon, InitiativeArrowIcon, AddNewCharacterIcon, RefreshIcon, Arrow, Sword, Heart, Shield}
