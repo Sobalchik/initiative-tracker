@@ -60,6 +60,7 @@ export default function Battle() {
     useState(false);
 
   useEffect(() => {
+    
     if (creatures.length > 0) {
       ref.current?.scrollToIndex({
         index,
@@ -69,18 +70,20 @@ export default function Battle() {
     }
   }, [index]);
 
+
   function handleAddCreature() {
-    //setCharacterCreationModalVisible(true)
+    setCharacterCreationModalVisible(true)
     dispatch({
       type: "added",
       id: uuid(),
-      title: "Item",
+      title: "Item" + Math.floor(Math.random() * 100) + 1,
     });
   }
 
   function handleDeleteCreature(id, index, fIndex) {
+
     if (index > fIndex) {
-      setIndex(index - 1);
+      setIndex((index) => index - 1);
     }
     if (index === creatures.length - 1) {
       setIndex(0);
@@ -101,17 +104,19 @@ export default function Battle() {
   let c = 0;
 
   const renderItem = ({ item, index: fIndex }) => {
-    // c++;
-    // console.log(c);
+
     return (
       <CreatureItem
         title={item.title}
         id={item.id}
         index={index}
         fIndex={fIndex}
+        onDelete={()=> handleDeleteCreature(item.id, index, fIndex)}
       />
     );
   };
+
+
 
   const keyExtractor = (item) => item.id;
 

@@ -1,5 +1,5 @@
 import { memo } from "react";
-import { StyleSheet, Text, View, Pressable  } from "react-native";
+import { StyleSheet, Text, View, Pressable } from "react-native";
 
 import { CreatureIcon, DeleteIcon } from "../components/Icons";
 
@@ -24,9 +24,9 @@ const CreatureItem = (props) => {
     >
       <CreatureIcon />
       <Text style={styles.title}>{props.title}</Text>
-      <Pressable onPress={() => handleDeleteCreature(id, index, fIndex)}>
-            <DeleteIcon />
-          </Pressable>
+      <Pressable onPress={props.onDelete}>
+        <DeleteIcon />
+      </Pressable>
     </Pressable>
   );
 };
@@ -48,7 +48,14 @@ const styles = StyleSheet.create({
 
 export default memo(CreatureItem, (prevProps, nextProps) => {
 
-  if ((nextProps.fIndex === nextProps.index)||(nextProps.fIndex===prevProps.index))
-  return false;
+  if (prevProps.fIndex !== nextProps.fIndex) return false; //для корректной работы удаления
+
+  if (
+    nextProps.fIndex === nextProps.index || // при смене индекса
+    nextProps.fIndex === prevProps.index
+  ) {
+    return false;
+  }
+
   return true;
 });
