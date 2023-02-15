@@ -1,4 +1,4 @@
-import { useState, useReducer, useRef, useEffect, memo} from "react";
+import { useState, useReducer, useRef, useEffect, memo } from "react";
 import { Entypo, Feather } from "@expo/vector-icons";
 import uuid from "react-uuid";
 
@@ -17,18 +17,14 @@ import {
   RefreshIcon,
   AddNewCharacterIcon,
   Arrow,
-  CreatureIcon,
   DeleteIcon,
 } from "../components/Icons";
 
+import CreatureItem from "./CreatureItem";
 import CharacterCreationModal from "./CharacterCreationModal";
 
 const { width, height } = Dimensions.get("screen");
 
-const _colors = {
-  active: `#FCD259ff`,
-  inactive: `#AED857`,
-};
 const _spacing = 10;
 
 function creaturesReducer(creatures, action) {
@@ -60,7 +56,8 @@ export default function Battle() {
   const [creatures, dispatch] = useReducer(creaturesReducer, []);
   const ref = useRef(null);
   const [index, setIndex] = useState(0);
-  const [characterCreationModalVisible, setCharacterCreationModalVisible] = useState(false);
+  const [characterCreationModalVisible, setCharacterCreationModalVisible] =
+    useState(false);
 
   useEffect(() => {
     if (creatures.length > 0) {
@@ -73,12 +70,12 @@ export default function Battle() {
   }, [index]);
 
   function handleAddCreature() {
-    setCharacterCreationModalVisible(true)
-    // dispatch({
-    //   type: "added",
-    //   id: uuid(),
-    //   title: "Item",
-    // });
+    //setCharacterCreationModalVisible(true)
+    dispatch({
+      type: "added",
+      id: uuid(),
+      title: "Item",
+    });
   }
 
   function handleDeleteCreature(id, index, fIndex) {
@@ -101,41 +98,23 @@ export default function Battle() {
     setIndex(0);
   }
 
-  const Item = ({ title, id, index, fIndex }) => (
-    <Pressable
-      style={{
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-      }}
-    >
-      <View
-        style={[
-          styles.trackerItem,
-          {
-            backgroundColor:
-              fIndex === index ? _colors.active : _colors.inactive,
-          },
-        ]}
-      >
-        <CreatureIcon />
-        <Text style={styles.title}>{title}</Text>
-        <Pressable onPress={() => handleDeleteCreature(id, index, fIndex)}>
-          <DeleteIcon />
-        </Pressable>
-      </View>
-    </Pressable>
-  );
+  let c = 0;
 
-  let c = 0
+  const renderItem = ({ item, index: fIndex }) => {
+    // c++;
+    // console.log(c);
+    return (
+      <CreatureItem
+        title={item.title}
+        id={item.id}
+        index={index}
+        fIndex={fIndex}
+      />
+    );
+  };
 
+  const keyExtractor = (item) => item.id;
 
-  const renderItem = ({ item, index: fIndex }) => { c++; console.log(c); return (
-    <Item title={item.title} id={item.id} index={index} fIndex={fIndex} /> 
-  );
-  }
-
-      
   return (
     <>
       <View style={styles.container}>
@@ -148,8 +127,11 @@ export default function Battle() {
           </Pressable>
         </View>
 
-        <CharacterCreationModal onClose = {()=> setCharacterCreationModalVisible(false)} characterCreationModalVisible={characterCreationModalVisible} />
-        
+        <CharacterCreationModal
+          onClose={() => setCharacterCreationModalVisible(false)}
+          characterCreationModalVisible={characterCreationModalVisible}
+        />
+
         <FlatList
           ref={ref}
           initialScrollIndex={index}
@@ -158,20 +140,25 @@ export default function Battle() {
           ListEmptyComponent={() => {
             return <Text>Nothing here</Text>;
           }}
-          keyExtractor={(item) => item.id}
+          keyExtractor={keyExtractor}
           showsVerticalScrollIndicator={false}
           renderItem={renderItem}
         />
         <View
           style={{
-            alignItems: "center",
+            alignCreatureItems: "center",
             flexDirection: "row",
             marginTop: _spacing * 10,
           }}
         >
-          <View style={{ alignItems: "center" }}>
+          <View style={{ alignCreatureItems: "center" }}>
             <Text
-              style={{ color: "#36303F", fontWeight: "700", marginBottom: 10 }}
+              style={{
+                color: "#36303F",
+                fontWeight: "700",
+                marginBottom: 10,
+                marginLeft: 60,
+              }}
             >
               Navigation
             </Text>
@@ -230,9 +217,6 @@ export default function Battle() {
 }
 
 const styles = StyleSheet.create({
-  image: {
-    justifyContent: "center",
-  },
   container: {
     marginTop: 45,
     alignItems: "center",
@@ -243,26 +227,17 @@ const styles = StyleSheet.create({
     width: 350,
     marginBottom: 10,
   },
-  trackerItem: {
-    width: 350,
-    height: 60,
-    justifyContent: "space-between",
-    flexDirection: "row",
-    alignItems: "center",
-    marginVertical: 8,
-    padding: 10,
-  },
   title: {
     fontSize: 16,
   },
   modal: {
     flex: 1,
-    alignItems: 'center',
-    backgroundColor: '#00ff00',
+    alignItems: "center",
+    backgroundColor: "#00ff00",
     padding: 100,
   },
   text: {
-    color: '#3f2949',
+    color: "#3f2949",
     marginTop: 10,
   },
 });
