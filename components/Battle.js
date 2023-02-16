@@ -35,8 +35,14 @@ function creaturesReducer(creatures, action) {
         {
           id: action.id,
           title: action.title,
+          hp: action.hp,
+          ac: action.ac,
+          initiative: action.initiative,
+          dexMod: action.dexMod,
         },
-      ];
+      ].sort(function (a, b) {
+        return a.initiative - b.initiative;
+      });
     }
     case "deleted": {
       return creatures.filter((c) => c.id !== action.id);
@@ -60,8 +66,12 @@ export default function Battle() {
     useState(false);
 
   useEffect(() => {
-    
-    if (creatures.length > 0) {
+
+    if (index < 0) {
+      setIndex(0);
+      return;
+    }
+    if (creatures.length >= 5) {
       ref.current?.scrollToIndex({
         index,
         animated: true,
@@ -70,9 +80,7 @@ export default function Battle() {
     }
   }, [index]);
 
-
   function handleAddCreature(creature) {
-    
     dispatch({
       type: "added",
       id: uuid(),
@@ -83,17 +91,31 @@ export default function Battle() {
       dexMod: creature.dexMod,
     });
 
-    setCharacterCreationModalVisible(false)
+    if (creatures.length >= 1) {
+      if (Number(creatures[index].initiative) > Number(creature.initiative)) {
+        setIndex(index + 1);
+      }
+    }
+
+    setCharacterCreationModalVisible(false);
   }
 
   function handleDeleteCreature(id, index, fIndex) {
-
     if (index > fIndex) {
       setIndex((index) => index - 1);
+
+      dispatch({
+        type: "deleted",
+        id: id,
+      });
+
+      return;
     }
-    if (index === creatures.length - 1) {
+
+    if (index === creatures.length - 1 && index === fIndex) {
       setIndex(0);
     }
+
     dispatch({
       type: "deleted",
       id: id,
@@ -110,18 +132,15 @@ export default function Battle() {
   let c = 0;
 
   const renderItem = ({ item, index: fIndex }) => {
-
     return (
       <CreatureItem
         item={item}
         index={index}
         fIndex={fIndex}
-        onDelete={()=> handleDeleteCreature(item.id, index, fIndex)}
+        onDelete={() => handleDeleteCreature(item.id, index, fIndex)}
       />
     );
   };
-
-
 
   const keyExtractor = (item) => item.id;
 
@@ -129,7 +148,9 @@ export default function Battle() {
     <>
       <View style={styles.container}>
         <View style={styles.header}>
-          <TouchableOpacity onPress={() => setCharacterCreationModalVisible(true)}>
+          <TouchableOpacity
+            onPress={() => setCharacterCreationModalVisible(true)}
+          >
             <AddNewCharacterIcon />
           </TouchableOpacity>
           <TouchableOpacity>
@@ -140,6 +161,7 @@ export default function Battle() {
         <CharacterCreationModal
           onClose={() => setCharacterCreationModalVisible(false)}
           characterCreationModalVisible={characterCreationModalVisible}
+          onCreateCreature={handleAddCreature}
         />
 
         <FlatList

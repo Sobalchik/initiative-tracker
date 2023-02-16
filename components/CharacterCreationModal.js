@@ -12,7 +12,6 @@ import { Heart, Shield, Sword } from "./Icons";
 import { useFonts } from "expo-font";
 import { useState, useEffect } from "react";
 
-
 const CharacterCreationModal = (props) => {
   const [fontsLoaded] = useFonts({
     "Fira-Sans-Extra": require("../assets/fonts/FiraSansExtraCondensed-Light.ttf"),
@@ -26,16 +25,12 @@ const CharacterCreationModal = (props) => {
     dexMod: "",
   });
 
-  useEffect(() => {
-    console.log(creatureStats);
-  }, [creatureStats]);
-
   const updateStats = (value, stat) => {
-    setCreatureStats(existingStats => ({
+    setCreatureStats((existingStats) => ({
       ...existingStats,
       [stat]: value.nativeEvent.text,
-    }))
-  }
+    }));
+  };
 
   return (
     <Modal
@@ -48,7 +43,7 @@ const CharacterCreationModal = (props) => {
         <TextInput
           style={[styles.input, { width: 150 }]}
           placeholder={"Name"}
-          onChange={(value) => updateStats(value,"title")}
+          onChange={(value) => updateStats(value, "title")}
         />
         <View style={{ flexDirection: "row" }}>
           <Heart style={{ marginTop: 15 }} />
@@ -56,14 +51,16 @@ const CharacterCreationModal = (props) => {
             style={styles.input}
             placeholder={"HP"}
             maxLength={3}
-            onChange={(value) => updateStats(value,"hp")}
+            keyboardType="numeric"
+            onChange={(value) => updateStats(value, "hp")}
           />
           <Shield style={{ marginTop: 15 }} />
           <TextInput
             style={styles.input}
             placeholder={"AC"}
+            keyboardType="numeric"
             maxLength={2}
-            onChange={(value) => updateStats(value,"ac")}
+            onChange={(value) => updateStats(value, "ac")}
           />
         </View>
         <View style={{ flexDirection: "row" }}>
@@ -71,8 +68,9 @@ const CharacterCreationModal = (props) => {
           <TextInput
             style={styles.input}
             placeholder={"10"}
+            keyboardType="numeric"
             maxLength={2}
-            onChange={(value) => updateStats(value,"initiative")}
+            onChange={(value) => updateStats(value, "initiative")}
           />
         </View>
         <View style={{ flexDirection: "row" }}>
@@ -80,12 +78,25 @@ const CharacterCreationModal = (props) => {
           <TextInput
             style={styles.input}
             placeholder={"3"}
+            keyboardType="numeric"
             maxLength={2}
-            onChange={(value) => updateStats(value,"dexMod")}
+            onChange={(value) => updateStats(value, "dexMod")}
           />
         </View>
 
-        <TouchableOpacity style={styles.button} onPress={props.onClose}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {
+            props.onCreateCreature(creatureStats);
+            setCreatureStats({
+              title: "",
+              hp: "",
+              ac: "",
+              initiative: "",
+              dexMod: "",
+            });
+          }}
+        >
           <Text style={[styles.text, { padding: 5, color: "#FFFFFF" }]}>
             Ready to Fight
           </Text>
