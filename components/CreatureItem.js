@@ -8,14 +8,14 @@ const _colors = {
   inactive: `#AED857`,
 };
 
-const CreatureItem = (props) => {
+const CreatureItem = ({item , index, fIndex, onDelete}) => {
   return (
     <Pressable
       style={[
         styles.trackerItem,
         {
           backgroundColor:
-            props.fIndex === props.index ? _colors.active : _colors.inactive,
+            fIndex === index ? _colors.active : _colors.inactive,
           flexDirection: "row",
           justifyContent: "space-between",
           alignItems: "center",
@@ -23,8 +23,8 @@ const CreatureItem = (props) => {
       ]}
     >
       <CreatureIcon />
-      <Text style={styles.title}>{props.title}</Text>
-      <Pressable onPress={props.onDelete}>
+      <Text style={styles.title}>{item.title}</Text>
+      <Pressable onPress={onDelete}>
         <DeleteIcon />
       </Pressable>
     </Pressable>

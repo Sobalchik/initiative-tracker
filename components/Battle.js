@@ -71,13 +71,19 @@ export default function Battle() {
   }, [index]);
 
 
-  function handleAddCreature() {
-    setCharacterCreationModalVisible(true)
+  function handleAddCreature(creature) {
+    
     dispatch({
       type: "added",
       id: uuid(),
-      title: "Item" + Math.floor(Math.random() * 100) + 1,
+      title: creature.title,
+      hp: creature.hp,
+      ac: creature.ac,
+      initiative: creature.initiative,
+      dexMod: creature.dexMod,
     });
+
+    setCharacterCreationModalVisible(false)
   }
 
   function handleDeleteCreature(id, index, fIndex) {
@@ -107,8 +113,7 @@ export default function Battle() {
 
     return (
       <CreatureItem
-        title={item.title}
-        id={item.id}
+        item={item}
         index={index}
         fIndex={fIndex}
         onDelete={()=> handleDeleteCreature(item.id, index, fIndex)}
@@ -124,12 +129,12 @@ export default function Battle() {
     <>
       <View style={styles.container}>
         <View style={styles.header}>
-          <Pressable onPress={handleAddCreature}>
+          <TouchableOpacity onPress={() => setCharacterCreationModalVisible(true)}>
             <AddNewCharacterIcon />
-          </Pressable>
-          <Pressable>
+          </TouchableOpacity>
+          <TouchableOpacity>
             <RefreshIcon onPress={handleRefreshCreatures} />
-          </Pressable>
+          </TouchableOpacity>
         </View>
 
         <CharacterCreationModal
