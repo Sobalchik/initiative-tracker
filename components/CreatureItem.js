@@ -23,7 +23,7 @@ const CreatureItem = ({item , index, fIndex, onDelete}) => {
       ]}
     >
       <CreatureIcon />
-      <Text style={styles.title}>{item.title}   Initiative: {item.initiative}</Text>
+      <Text style={styles.title}> Name: {item.title} - {item.initiative}</Text>
       <Pressable onPress={onDelete}>
         <DeleteIcon />
       </Pressable>

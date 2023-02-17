@@ -41,7 +41,7 @@ function creaturesReducer(creatures, action) {
           dexMod: action.dexMod,
         },
       ].sort(function (a, b) {
-        return a.initiative - b.initiative;
+        return b.initiative-a.initiative;
       });
     }
     case "deleted": {
@@ -92,7 +92,7 @@ export default function Battle() {
     });
 
     if (creatures.length >= 1) {
-      if (Number(creatures[index].initiative) > Number(creature.initiative)) {
+      if ((Number(creatures[index].initiative) < Number(creature.initiative))) {
         setIndex(index + 1);
       }
     }
