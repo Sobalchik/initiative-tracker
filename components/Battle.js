@@ -5,12 +5,9 @@ import uuid from "react-uuid";
 import {
   StyleSheet,
   View,
-  Pressable,
-  FlatList,
   Dimensions,
   TouchableOpacity,
   Text,
-  Button,
 } from "react-native";
 
 import {
@@ -22,6 +19,8 @@ import {
 
 import CreatureItem from "./CreatureItem";
 import CharacterCreationModal from "./CharacterCreationModal";
+
+import { FlatList } from "react-native-gesture-handler";
 
 const { width, height } = Dimensions.get("screen");
 
@@ -41,7 +40,7 @@ function creaturesReducer(creatures, action) {
           dexMod: action.dexMod,
         },
       ].sort(function (a, b) {
-        return b.initiative-a.initiative;
+        return b.initiative - a.initiative;
       });
     }
     case "deleted": {
@@ -66,7 +65,6 @@ export default function Battle() {
     useState(false);
 
   useEffect(() => {
-
     if (index < 0) {
       setIndex(0);
       return;
@@ -92,7 +90,7 @@ export default function Battle() {
     });
 
     if (creatures.length >= 1) {
-      if ((Number(creatures[index].initiative) < Number(creature.initiative))) {
+      if (Number(creatures[index].initiative) < Number(creature.initiative)) {
         setIndex(index + 1);
       }
     }
@@ -128,8 +126,6 @@ export default function Battle() {
     });
     setIndex(0);
   }
-
-  let c = 0;
 
   const renderItem = ({ item, index: fIndex }) => {
     return (
@@ -175,6 +171,9 @@ export default function Battle() {
           keyExtractor={keyExtractor}
           showsVerticalScrollIndicator={false}
           renderItem={renderItem}
+          ItemSeparatorComponent={() => {
+            return <View style={{ marginVertical: 8 }} />;
+          }}
         />
         <View
           style={{
